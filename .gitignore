@@ -1,2 +1,2 @@
-ocr/.env
-openai_processing/.env
+.env
+.venv

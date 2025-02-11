@@ -33,3 +33,11 @@ def list_projects(request):
     """
     projects = Project.objects.all()
     return render(request, "list_projects.html", {"projects": projects})
+
+
+def project_detail(request, project_id):
+    """
+    Vista para mostrar los detalles de un proyecto.
+    """
+    project = get_object_or_404(Project, id=project_id)
+    return render(request, "project_detail.html", {"project": project})

@@ -32,17 +32,21 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Carpeta donde se guardarán los JSON dentro de openai_processing
-JSON_OUTPUTS_DIR = os.path.join(BASE_DIR, "openai_processing", "json-outputs")
-os.makedirs(JSON_OUTPUTS_DIR, exist_ok=True)  # Crear si no existe
+# Carpeta raíz para todos los archivos media (subidas y JSONs)
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+os.makedirs(MEDIA_ROOT, exist_ok=True)  # Crear si no existe
 
-# Carpeta donde se guardarán los archivos subidos dentro de ocr
-UPLOADS_DIR = os.path.join(BASE_DIR, "ocr", "uploads")
-os.makedirs(UPLOADS_DIR, exist_ok=True)  # Crear si no existe
+# Subcarpetas dentro de MEDIA_ROOT
+JSON_OUTPUTS_DIR = os.path.join(MEDIA_ROOT, "json-outputs")
+UPLOADS_DIR = os.path.join(MEDIA_ROOT, "uploads")
 
-# Configuración para servir archivos en desarrollo
+os.makedirs(JSON_OUTPUTS_DIR, exist_ok=True)  # Crear subcarpeta para JSONs
+os.makedirs(UPLOADS_DIR, exist_ok=True)  # Crear subcarpeta para PDFs
+
+# URL pública para acceder a los archivos en desarrollo
 MEDIA_URL = "/media/"
-MEDIA_ROOT = UPLOADS_DIR
+
+#TODO: arregral problema, no puedo descargar los pdfs
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -68,6 +72,7 @@ INSTALLED_APPS = [
     "projects",
     "ocr",
     "openai_processing",
+    "clu",
 ]
 
 TAILWIND_APP_NAME = "theme"

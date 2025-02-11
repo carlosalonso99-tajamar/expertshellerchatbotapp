@@ -1,11 +1,10 @@
 from django.urls import path
-from .views import document_context, process_texts, list_json_files
+from .views import list_json_files#, process_texts # document_context, 
 
 app_name = "openai_processing"
 
 
 urlpatterns = [
-    path("document-context/", document_context, name="document_context"),
-    path("process-texts/", process_texts, name="process_texts"),
+    # path("document-context/", document_context, name="document_context"),
     path("json-files/", list_json_files, name="json-files"),
 ]

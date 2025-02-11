@@ -29,6 +29,7 @@ urlpatterns = [
     path("ocr/", include("ocr.urls")),  # OCR para subir documentos
     path("projects/", include("projects.urls")),  # Asegurar que projects está incluido
     path("openai/", include("openai_processing.urls")),
+    path("clu/", include("clu.urls")),
     path("admin/", admin.site.urls),
 ]
 

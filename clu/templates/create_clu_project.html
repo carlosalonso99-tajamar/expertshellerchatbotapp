@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto mt-10">
+    <h1 class="text-3xl font-bold text-center">Crear CLU Project</h1>
+    <p class="text-center text-gray-600">Asocia un chatbot de Azure CLU con este proyecto.</p>
+
+    <div class="mt-6 max-w-lg mx-auto bg-white p-6 shadow-lg rounded-lg">
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label for="id_name" class="block text-gray-700 font-semibold">Nombre del CLU Project:</label>
+                {{ form.name }}
+            </div>
+            <div class="mb-4">
+                <label for="id_description" class="block text-gray-700 font-semibold">Descripción:</label>
+                {{ form.description }}
+            </div>
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                Crear CLU Project
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+<!-- TODO: sacare cartelito si no hay json asociao para que crees un  -->
