@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Subir Documentos</title>
+</head>
+<body>
+    <h1>Subir Documentos para {{ project.name }}</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="files" multiple required>
+        <button type="submit">Subir Archivos</button>
+    </form>
+    <a href="{% url 'project_detail' project.id %}">Volver al Proyecto</a>
+</body>
+</html>

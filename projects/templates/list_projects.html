@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto mt-10">
+    <h1 class="text-3xl font-bold mb-5">Proyectos</h1>
+
+    <!-- Botón para crear un nuevo proyecto -->
+    <a href="{% url 'projects:create' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        + Crear Nuevo Proyecto
+    </a>
+
+    <!-- Lista de proyectos existentes -->
+    <ul class="mt-5">
+        {% for project in projects %}
+            <li class="bg-gray-100 p-4 my-2 rounded shadow">
+                <a href="{% url 'projects:project_detail' project.id %}" class="text-blue-600 font-semibold">
+                    {{ project.name }}
+                </a>
+            </li>
+        {% empty %}
+            <li class="text-gray-500">No hay proyectos aún. ¡Crea uno nuevo!</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

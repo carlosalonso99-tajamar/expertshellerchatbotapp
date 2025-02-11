@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Chatbot Creator{% endblock %}</title>
+    <link href="{% static 'css/dist/styles.css' %}" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-900">
+
+    <!-- Navbar -->
+    <nav class="bg-blue-600 p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="{% url 'home' %}" class="text-white text-xl font-bold">Chatbot Creator</a>
+            <ul class="flex space-x-4">
+                <li><a href="{% url 'projects:list' %}" class="text-white hover:underline">Projects</a></li>
+                {% for project in projects %}
+                    <li><a href="{% url 'ocr:upload' project_id=project.id %}" class="text-white hover:underline">OCR - {{ project.name }}</a></li>
+                {% endfor %}
+                <li><a href="{% url 'openai_processing:json-files' %}" class="text-white hover:underline">Processed JSONs</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Contenido de cada página -->
+    <div class="container mx-auto mt-10 text-center">
+        {% block content %}{% endblock %}
+    </div>
+
+</body>
+</html>

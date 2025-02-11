@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Generados</title>
+</head>
+<body>
+    <h1>Lista de JSON Generados</h1>
+
+    {% if json_files %}
+        <ul>
+            {% for json_file in json_files %}
+                <li>
+                    <a href="{{ json_file.file.url }}" download>Descargar JSON - {{ json_file.created_at }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay JSON generados.</p>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Definir Contexto</title>
+</head>
+<body>
+    <h1>Define el contexto de los documentos</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="intent">Intención del documento:</label>
+        <input type="text" name="intent" required><br>
+
+        <label for="entities">Entidades clave (separadas por comas):</label>
+        <textarea name="entities" rows="4" required></textarea><br>
+
+        <button type="submit">Enviar</button>
+    </form>
+</body>
+</html>

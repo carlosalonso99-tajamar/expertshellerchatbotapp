@@ -14,25 +14,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-
-from django.contrib import admin
 from django.urls import path, include
-
-from django.conf import settings
-from django.conf.urls.static import static
-from django.urls import path, include
-
-from django.urls import path, include
+from .views import home
+from django.shortcuts import render
 
 urlpatterns = [
-    path("", include("core.urls")),  # Core maneja la homepage
-    path("ocr/", include("ocr.urls")),  # OCR para subir documentos
-    path("projects/", include("projects.urls")),  # Asegurar que projects está incluido
-    path("openai/", include("openai_processing.urls")),
-    path("admin/", admin.site.urls),
+    path("", home, name="home"),
+   
 ]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
 

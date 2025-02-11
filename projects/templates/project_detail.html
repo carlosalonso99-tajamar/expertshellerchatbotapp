@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ project.name }} - Proyecto{% endblock %}
+
+{% block content %}
+    <h1 class="text-3xl font-bold">{{ project.name }}</h1>
+    <p class="text-lg text-gray-700 mt-2">{{ project.description }}</p>
+
+    <!-- Formulario para subir documentos -->
+    <div class="mt-6">
+        <h2 class="text-xl font-semibold">Añadir Documentos</h2>
+        <form action="{% url 'ocr:upload' project_id=project.id %}" method="post" enctype="multipart/form-data" class="mt-4">
+            {% csrf_token %}
+            <input type="file" name="files" multiple class="border p-2 rounded-md">
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                Subir
+            </button>
+        </form>
+    </div>
+
+    <!-- Listado de documentos subidos -->
+    <div class="mt-6">
+        <h2 class="text-xl font-semibold">Documentos Subidos</h2>
+        <ul class="mt-2">
+            {% for doc in project.documents.all %}
+                <li class="border p-2 rounded-md mt-2">{{ doc.file.name }}</li>
+            {% empty %}
+                <p class="text-gray-500">Aún no hay documentos subidos.</p>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

@@ -27,17 +27,54 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# DIR
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Carpeta donde se guardarán los JSON dentro de openai_processing
+JSON_OUTPUTS_DIR = os.path.join(BASE_DIR, "openai_processing", "json-outputs")
+os.makedirs(JSON_OUTPUTS_DIR, exist_ok=True)  # Crear si no existe
+
+# Carpeta donde se guardarán los archivos subidos dentro de ocr
+UPLOADS_DIR = os.path.join(BASE_DIR, "ocr", "uploads")
+os.makedirs(UPLOADS_DIR, exist_ok=True)  # Crear si no existe
+
+# Configuración para servir archivos en desarrollo
+MEDIA_URL = "/media/"
+MEDIA_ROOT = UPLOADS_DIR
+
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+STATIC_URL = "/static/"
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "theme/static"),  # Asegúrate de que está bien configurado
+]
+
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "tailwind",
+    "theme",
+    "core",
+    "projects",
+    "ocr",
+    "openai_processing",
 ]
+
+TAILWIND_APP_NAME = "theme"
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -51,21 +88,25 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'expertshellerchatbotapp.urls'
 
+import os
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [os.path.join(BASE_DIR, "templates")],  # Asegúrate de que esta ruta apunta bien
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'expertshellerchatbotapp.wsgi.application'
 
@@ -73,12 +114,17 @@ WSGI_APPLICATION = 'expertshellerchatbotapp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent  # Ahora BASE_DIR es un Path
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',  # Ahora funciona correctamente
     }
 }
+
 
 
 # Password validation
@@ -121,3 +167,4 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
