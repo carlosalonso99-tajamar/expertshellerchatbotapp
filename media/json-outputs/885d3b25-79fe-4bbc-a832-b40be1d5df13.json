@@ -1,0 +1,198 @@
+{
+    "projectFileVersion": "2023-04-01",
+    "stringIndexType": "Utf16CodeUnit",
+    "metadata": {
+        "projectKind": "Conversation",
+        "projectName": "PRODUCTS-PROJECT",
+        "multilingual": true,
+        "description": "DESCRIPTION",
+        "language": "es",
+        "settings": {
+            "confidenceThreshold": 0
+        }
+    },
+    "assets": {
+        "projectKind": "Conversation",
+        "intents": [
+            {
+                "category": "Product Information"
+            },
+            {
+                "category": "Technical Specifications"
+            },
+            {
+                "category": "Security Features"
+            },
+            {
+                "category": "Warranty and Support Extensions"
+            }
+        ],
+        "entities": [
+            {
+                "category": "ARTI SOFTWARE TEC. INF. S.L."
+            },
+            {
+                "category": "ARTI Software"
+            },
+            {
+                "category": "MADRID"
+            },
+            {
+                "category": "Lenovo Thinkpad X1 2-in-1 Gen 9"
+            },
+            {
+                "category": "Lenovo"
+            },
+            {
+                "category": "Intel® Core™ Ultra"
+            },
+            {
+                "category": "Intel vPro\" Evo™"
+            },
+            {
+                "category": "ThinkShield"
+            },
+            {
+                "category": "Intel® Threat Detection (TDT)"
+            },
+            {
+                "category": "Intel® Unison™"
+            },
+            {
+                "category": "Intel Graphics"
+            },
+            {
+                "category": "ThinkPad X1 2-in-1 Gen 9"
+            },
+            {
+                "category": "Windows 11 Pro"
+            },
+            {
+                "category": "Spanish"
+            },
+            {
+                "category": "Lenovo Thinkpad X1"
+            },
+            {
+                "category": "jaromero@artisoft.es"
+            },
+            {
+                "category": "https://smartfind.lenovo.com/accessories/#/"
+            },
+            {
+                "category": "antonio perez 7 4º-4"
+            },
+            {
+                "category": "28002"
+            },
+            {
+                "category": "Intel Core"
+            },
+            {
+                "category": "155U"
+            },
+            {
+                "category": "Intel"
+            },
+            {
+                "category": "4,8 GHZ Ultra T"
+            },
+            {
+                "category": "Windows 11"
+            }
+        ],
+        "utterances": [
+            {
+                "text": "Quisiera conocer las características del Lenovo Thinkpad X1 2-in-1 Gen 9.",
+                "intent": "Technical Specifications",
+                "language": "es",
+                "dataset": "Train",
+                "entities": [
+                    {
+                        "category": "Lenovo Thinkpad X1 2-in-1 Gen 9",
+                        "offset": 36,
+                        "length": 34
+                    }
+                ]
+            },
+            {
+                "text": "¿Qué tipo de seguridad ofrece el ThinkPad X1 2-in-1 Gen 9?",
+                "intent": "Security Features",
+                "language": "es",
+                "dataset": "Train",
+                "entities": [
+                    {
+                        "category": "ThinkPad X1 2-in-1 Gen 9",
+                        "offset": 26,
+                        "length": 26
+                    }
+                ]
+            },
+            {
+                "text": "Necesito información sobre la garantía para mi Lenovo Thinkpad X1.",
+                "intent": "Warranty and Support Extensions",
+                "language": "es",
+                "dataset": "Train",
+                "entities": [
+                    {
+                        "category": "Lenovo Thinkpad X1",
+                        "offset": 38,
+                        "length": 19
+                    }
+                ]
+            },
+            {
+                "text": "¿Cuáles son las especificaciones técnicas del procesador Intel Core Ultra?",
+                "intent": "Technical Specifications",
+                "language": "es",
+                "dataset": "Train",
+                "entities": [
+                    {
+                        "category": "Intel® Core™ Ultra",
+                        "offset": 52,
+                        "length": 19
+                    }
+                ]
+            },
+            {
+                "text": "Me gustaría saber más sobre las funcionalidades de ThinkShield en mi equipo.",
+                "intent": "Security Features",
+                "language": "es",
+                "dataset": "Train",
+                "entities": [
+                    {
+                        "category": "ThinkShield",
+                        "offset": 39,
+                        "length": 11
+                    }
+                ]
+            },
+            {
+                "text": "¿Qué opciones de ampliación de garantía existen para el Lenovo Thinkpad X1 2-in-1 Gen 9?",
+                "intent": "Warranty and Support Extensions",
+                "language": "es",
+                "dataset": "Train",
+                "entities": [
+                    {
+                        "category": "Lenovo Thinkpad X1 2-in-1 Gen 9",
+                        "offset": 56,
+                        "length": 34
+                    }
+                ]
+            },
+            {
+                "text": "¿Podrías darme información sobre el rendimiento de la Intel® Core™ Ultra?",
+                "intent": "Technical Specifications",
+                "language": "es",
+                "dataset": "Train",
+                "entities": [
+                    {
+                        "category": "Intel® Core™ Ultra",
+                        "offset": 52,
+                        "length": 19
+                    }
+                ]
+            }
+        ]
+    }
+}

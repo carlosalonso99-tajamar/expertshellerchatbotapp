@@ -1,187 +1,50 @@
-import requests
-import time
+"""
+This code sample shows Prebuilt Layout operations with the Azure AI Document Intelligence client library.
+The async versions of the samples require Python 3.8 or later.
 
-# Configuración del recurso
-API_KEY = "viUVh1sjdzBWKmyGJnmCNlECpmYQFhimn1dxE7U7tsBBlkd1pO8RJQQJ99BBACYeBjFXJ3w3AAAaACOGrbJX"
-ENDPOINT = "https://carlos-ai-lang.cognitiveservices.azure.com/"
-PROJECT_NAME = "4"
-API_VERSION = "2023-04-01"
+To learn more, please visit the documentation - Quickstart: Document Intelligence (formerly Form Recognizer) SDKs
+https://learn.microsoft.com/azure/ai-services/document-intelligence/quickstarts/get-started-sdks-rest-api?pivots=programming-language-python
+"""
 
-# URL para importar el proyecto
-url = f"{ENDPOINT}/language/authoring/analyze-conversations/projects/{PROJECT_NAME}/:import?api-version={API_VERSION}"
+from azure.core.credentials import AzureKeyCredential
+from azure.ai.documentintelligence import DocumentIntelligenceClient
+from azure.ai.documentintelligence.models import AnalyzeDocumentRequest
 
-# Encabezados de la solicitud
-headers = {
-    "Ocp-Apim-Subscription-Key": API_KEY,
-    "Content-Type": "application/json"
-}
+"""
+Remember to remove the key from your code when you're done, and never post it publicly. For production, use
+secure methods to store and access your credentials. For more information, see 
+https://docs.microsoft.com/en-us/azure/cognitive-services/cognitive-services-security?tabs=command-line%2Ccsharp#environment-variables-and-application-configuration
+"""
+endpoint = "https://doc-intel-carlos.cognitiveservices.azure.com/"
+key = "4efSk8gz2TZLNqaaLI9Knhwta2Js1DoolPGsyeqIlQJI2agdhvDXJQQJ99BBACYeBjFXJ3w3AAALACOGjMSn"
 
-# Cuerpo del JSON corregido
-json_payload = {
-    "projectFileVersion": "2022-10-01-preview",
-    "stringIndexType": "Utf16CodeUnit",
-    "metadata": {
-        "projectKind": "Conversation",
-        "settings": {
-            "confidenceThreshold": 0.7
-        },
-        "projectName": "Dell Product Information",
-        "multilingual": True,
-        "description": "Analysis of Dell product specifications",
-        "language": "es"
-    },
-    "assets": {
-        "projectKind": "Conversation",
-        "intents": [
-            {
-                "category": "ConsultarProducto"
-            },
-            {
-                "category": "SolicitarPrecio"
-            },
-            {
-                "category": "ConsultarGarantia"
-            }
-        ],
-        "entities": [
-            {
-                "category": "Producto",
-                "subentities": []
-            },
-            {
-                "category": "Precio",
-                "subentities": []
-            },
-            {
-                "category": "Garantia",
-                "subentities": []
-            }
-        ],
-        "utterances": [
-            {
-                "text": "¿Qué características tiene el Dell XPS 14?",
-                "dataset": "ProductInqueries",
-                "intent": "ConsultarProducto",
-                "entities": [
-                    {
-                        "category": "Producto",
-                        "offset": 32,
-                        "length": 11
-                    }
-                ]
-            },
-            {
-                "text": "¿Cuál es el precio del Dell XPS 14?",
-                "language": "es",
-                "dataset": "PricingInquiries",
-                "intent": "SolicitarPrecio",
-                "entities": [
-                    {
-                        "category": "Producto",
-                        "offset": 26,
-                        "length": 11
-                    },
-                    {
-                        "category": "Precio",
-                        "offset": 36,
-                        "length": 5
-                    }
-                ]
-            },
-            {
-                "text": "¿Cuánto dura la garantía del Dell XPS 14?",
-                "dataset": "WarrantyInquiries",
-                "intent": "ConsultarGarantia",
-                "entities": [
-                    {
-                        "category": "Producto",
-                        "offset": 31,
-                        "length": 11
-                    },
-                    {
-                        "category": "Garantia",
-                        "offset": 26,
-                        "length": 7
-                    }
-                ]
-            },
-            {
-                "text": "Dame detalles sobre la batería y carga del Dell XPS 14.",
-                "language": "es",
-                "dataset": "ProductInqueries",
-                "intent": "ConsultarProducto",
-                "entities": [
-                    {
-                        "category": "Producto",
-                        "offset": 43,
-                        "length": 11
-                    }
-                ]
-            },
-            {
-                "text": "¿Puedes decirme el precio de la Dell XPS 14?",
-                "dataset": "PricingInquiries",
-                "intent": "SolicitarPrecio",
-                "entities": [
-                    {
-                        "category": "Producto",
-                        "offset": 30,
-                        "length": 11
-                    },
-                    {
-                        "category": "Precio",
-                        "offset": 40,
-                        "length": 5
-                    }
-                ]
-            },
-            {
-                "text": "¿Cuál es la duración de la garantía del Dell XPS 14?",
-                "language": "es",
-                "dataset": "WarrantyInquiries",
-                "intent": "ConsultarGarantia",
-                "entities": [
-                    {
-                        "category": "Producto",
-                        "offset": 38,
-                        "length": 11
-                    },
-                    {
-                        "category": "Garantia",
-                        "offset": 29,
-                        "length": 7
-                    }
-                ]
-            }
-        ]
-    }
-}
-# Enviar la solicitud a Azure
-response = requests.post(url, headers=headers, json=json_payload)
+# 🔹 Crear el cliente de Azure Document Intelligence
+document_intelligence_client = DocumentIntelligenceClient(
+    endpoint=endpoint, credential=AzureKeyCredential(key)
+)
 
-# Verificar si la solicitud fue aceptada
-if response.status_code == 202:
-    operation_url = response.headers.get("operation-location")
-    if operation_url:
-        print(f"✅ Importación iniciada. Monitoreando operación en: {operation_url}")
+# 🔹 Ruta del archivo local
+pdf_path = "./fichas-tecnicas/16Z90R-E.AD78B.pdf"
 
-        # Consultar el estado de la operación cada 5 segundos hasta que termine
-        while True:
-            status_response = requests.get(operation_url, headers=headers)
-            status_data = status_response.json()
+# 🔹 Leer el archivo en modo binario y enviarlo correctamente
+with open(pdf_path, "rb") as pdf_file:
+    poller = document_intelligence_client.begin_analyze_document(
+        model_id="prebuilt-layout",  # Modelo preentrenado para texto/tablas
+        document=pdf_file,  # Enviamos el archivo binario directamente
+    )
 
-            # Mostrar estado actual
-            print(f"⏳ Estado actual: {status_data.get('status')}")
+# 🔹 Obtener los resultados del análisis
+result = poller.result()
 
-            if status_data.get("status") in ["succeeded", "failed"]:
-                print(f"🚀 Operación completada. Estado final: {status_data.get('status')}")
-                print("📌 Respuesta completa:", status_data)
-                break
+# 🔹 Imprimir el contenido extraído
+for page in result.pages:
+    print(f"📄 Página {page.page_number}")
+    for line in page.lines:
+        print(line.content)
 
-            time.sleep(5)  # Esperar antes de la siguiente consulta
+for table_idx, table in enumerate(result.tables):
+    print(f"📊 Tabla {table_idx} - Filas: {table.row_count}, Columnas: {table.column_count}")
+    for cell in table.cells:
+        print(f"Celda[{cell.row_index}][{cell.column_index}]: {cell.content}")
 
-    else:
-        print("❌ No se encontró la URL de seguimiento en la respuesta.")
-else:
-    print(f"❌ Error en la solicitud. Código {response.status_code}")
-    print("📌 Respuesta JSON:", response.text)
+print("✅ ¡Extracción completada con éxito!")

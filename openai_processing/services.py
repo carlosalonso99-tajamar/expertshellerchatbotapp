@@ -6,141 +6,155 @@ from .models import GeneratedJSON
 
 load_dotenv()
 
-openai_client = openai.AzureOpenAI(
-    api_key=os.getenv("AZURE_OPENAI_API_KEY"),
-    api_version="2023-12-01-preview",
-    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
-)
-
-import re
+# Configurar el cliente OpenAI
+openai_client = openai.OpenAI(api_key=os.getenv("OPEN_AI_KEY"))
 
 class OpenAIService:
     @staticmethod
-    def generate_structured_json(documents):
-        """
-        Envía los documentos a OpenAI y obtiene un JSON con intenciones y entidades detectadas automáticamente.
-        """
-        print("✅ Entrando en `generate_structured_json`")
-
-        text_data = [{"filename": doc.file.name, "text": doc.extracted_text} for doc in documents]
-
+    def extract_intents(documents):
+        """ Extrae intenciones de los documentos en el formato esperado """
         prompt = """
-            Eres un experto en procesamiento de lenguaje natural (NLP) y comprensión de intenciones del usuario.
-            Tu tarea es analizar los siguientes documentos y extraer automáticamente:
-            1. **Intenciones (intents):** Lo que el usuario intenta lograr con el contenido.
-            2. **Entidades (entities):** Datos clave mencionados en los documentos.
-            3. **Utterances:** Frases de ejemplo que corresponden a cada intención y entidad.
-
-            ### 📚 **Reglas generales**
-            Genera un JSON estructurado siguiendo el formato de Conversational Language Understanding (CLU) de Azure.
-
-            1️⃣ **Las entidades deben estar bien definidas en la sección 'entities' antes de usarlas en las utterances.**  
-            2️⃣ **Cada utterance debe usar solo entidades previamente definidas en la lista de entidades.**  
-            3️⃣ **El JSON debe incluir intenciones relevantes, entidades correctamente estructuradas y utterances que reflejen escenarios realistas.**  
-            4️⃣ **No inventes entidades nuevas en las utterances si no han sido definidas previamente en la estructura del JSON.**  
-            5️⃣ **Verifica que los valores de 'offset' y 'length' en cada utterance sean correctos y se correspondan con la posición exacta en la frase.**  
-            6️⃣ **Si una entidad es mencionada en una utterance, debe estar correctamente definida en la lista de entidades.**  
-            7️⃣ **Las intenciones deben ser útiles y reflejar acciones que un usuario realmente intentaría realizar.**
-
-            
-             ### 📌 **Reglas adicionales**
-    - **No incluyas la clave `subentities` en las entidades.**  
-    - **Si una entidad tiene componentes internos, usa la clave `children` en lugar de `subentities`.**
-    - **Estructura correctamente las entidades siguiendo el formato de Azure CLU.**
-            ---
-
-            ### 📌 **Formato de salida requerido**
-            Importante: **la salida debe ser solamente el JSON**.
-            No incluyas explicaciones ni texto adicional antes o después del JSON.
-
-            Ejemplo de formato:
-
-            ```json
-            {
-                "projectFileVersion": "{API-VERSION}",
-                "stringIndexType": "Utf16CodeUnit",
-                "metadata": {
-                    "projectKind": "Conversation",
-                    "settings": {
-                    "confidenceThreshold": 0.7
-                    },
-                    "projectName": "{PROJECT-NAME}",
-                    "multilingual": true,
-                    "description": "Trying out CLU",
-                    "language": "{LANGUAGE-CODE}"
-                },
-                "assets": {
-                    "projectKind": "Conversation",
-                    "intents": [
-                    {
-                        "category": "intent1"
-                    },
-                    {
-                        "category": "intent2"
-                    }
-                    ],
-                    "entities": [
-                    {
-                        "category": "entity1"
-                    }
-                    ],
-                    "utterances": [
-                    {
-                        "text": "text1",
-                        "dataset": "{DATASET}",
-                        "intent": "intent1",
-                        "entities": [
-                        {
-                            "category": "entity1",
-                            "offset": 5,
-                            "length": 5
-                        }
-                        ]
-                    },
-                    {
-                        "text": "text2",
-                        "language": "{LANGUAGE-CODE}",
-                        "dataset": "{DATASET}",
-                        "intent": "intent2",
-                        "entities": []
-                    }
-                    ]
-                }
-                }
-            ```
+        Analiza los siguientes documentos y extrae las intenciones principales en formato JSON estricto.
+        Asegúrate de que las intenciones identificadas se referencien correctamente en las utterances.
+        Formato:
+        {
+          "intents": [
+            {"category": "intent1"},
+            {"category": "intent2"}
+          ]
+        }
         """
-
-
+        text_data = "\n".join([doc.extracted_text for doc in documents])
         try:
-            print("📡 Enviando solicitud a OpenAI...")
-            text_data_str = "\n".join([f"Documento: {doc['filename']}\nContenido:\n{doc['text']}" for doc in text_data])
             response = openai_client.chat.completions.create(
-                model=os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME"),
+                model="gpt-4-turbo",
                 messages=[
-                    {"role": "system", "content": "Eres un asistente especializado en análisis de documentos."},
+                    {"role": "system", "content": "Eres un experto en NLP y clasificación de intenciones."},
                     {"role": "user", "content": prompt},
-                    {"role": "assistant", "content": text_data_str}
+                    {"role": "assistant", "content": text_data}
+                ],
+                max_tokens=500
+            )
+            raw_response = response.choices[0].message.content.strip()
+            raw_response = raw_response.replace("```json", "").replace("```", "").strip()
+            return json.loads(raw_response)
+        except json.JSONDecodeError as e:
+            print(f"❌ Error al decodificar JSON en extract_intents: {e}")
+            return {"intents": []}
+    
+    @staticmethod
+    def extract_entities(documents):
+        """ Extrae entidades en el formato esperado """
+        prompt = """
+        Analiza los siguientes documentos y extrae todas las entidades relevantes en formato JSON estricto.
+        Asegúrate de que cada entidad identificada pueda ser referenciada en las utterances correctamente.
+        Formato:
+        {
+          "entities": [
+            {"category": "entity1"},
+            {"category": "entity2"}
+          ]
+        }
+        """
+        text_data = "\n".join([doc.extracted_text for doc in documents])
+        try:
+            response = openai_client.chat.completions.create(
+                model="gpt-4-turbo",
+                messages=[
+                    {"role": "system", "content": "Eres un experto en NLP y extracción de entidades."},
+                    {"role": "user", "content": prompt},
+                    {"role": "assistant", "content": text_data}
+                ],
+                max_tokens=500
+            )
+            raw_response = response.choices[0].message.content.strip()
+            raw_response = raw_response.replace("```json", "").replace("```", "").strip()
+            return json.loads(raw_response)
+        except json.JSONDecodeError as e:
+            print(f"❌ Error al decodificar JSON en extract_entities: {e}")
+            return {"entities": []}
+    
+    @staticmethod
+    def generate_utterances(documents, intents, entities):
+        """ Genera ejemplos de utterances en el formato esperado """
+        intents_json = json.dumps(intents, indent=2, ensure_ascii=False)
+        entities_json = json.dumps(entities, indent=2, ensure_ascii=False)
+        
+        prompt = f"""
+        Basado en las siguientes intenciones y entidades, genera ejemplos de utterances en formato JSON estricto.
+        Asegúrate de que cada utterance tenga un intent referenciado correctamente en la lista de intents y que las entidades existan en la lista de entities.
+        Formato:
+        {{
+          "utterances": [
+            {{
+              "text": "utterance1",
+              "intent": "intent1",
+              "language": "es",
+              "dataset": "Train",
+              "entities": [
+                {{
+                  "category": "entity1",
+                  "offset": 6,
+                  "length": 4
+                }}
+              ]
+            }}
+          ]
+        }}
+        
+        Intenciones detectadas: {intents_json}
+        Entidades detectadas: {entities_json}
+        """
+        
+        text_data = "\n".join([doc.extracted_text for doc in documents])
+        try:
+            response = openai_client.chat.completions.create(
+                model="gpt-4-turbo",
+                messages=[
+                    {"role": "system", "content": "Eres un experto en NLP y generación de ejemplos de conversación."},
+                    {"role": "user", "content": prompt},
+                    {"role": "assistant", "content": text_data}
                 ],
                 max_tokens=1000
             )
-            print("✅ Respuesta recibida de OpenAI")
-
-            json_result = response.choices[0].message.content
-            print(f"📜 JSON generado antes de limpieza:\n{json_result}")
-
-            # Limpiar triple backticks y la palabra "json"
-            json_result = re.sub(r"```json\n?|```", "", json_result).strip()
-            print(f"📜 JSON después de limpieza:\n{json_result}")
-
-            # Convertir a JSON válido
-            parsed_json = json.loads(json_result)
-
-            # Guardar en la BD y en el sistema de archivos
-            json_instance = GeneratedJSON()
-            json_instance.save_json(parsed_json)
-
-            print("✅ JSON guardado en BD y archivos")
-            return parsed_json
-        except Exception as e:
-            print(f"❌ Error en `generate_structured_json`: {e}")
-            return {"error": str(e)}
+            raw_response = response.choices[0].message.content.strip()
+            raw_response = raw_response.replace("```json", "").replace("```", "").strip()
+            return json.loads(raw_response)
+        except json.JSONDecodeError as e:
+            print(f"❌ Error al decodificar JSON en generate_utterances: {e}")
+            return {"utterances": []}
+    
+    @staticmethod
+    def generate_structured_json(documents):
+        """ Ensambla el JSON final """
+        print("✅ Extrayendo intenciones...")
+        intents = OpenAIService.extract_intents(documents)
+        print("✅ Extrayendo entidades...")
+        entities = OpenAIService.extract_entities(documents)
+        print("✅ Generando utterances...")
+        utterances = OpenAIService.generate_utterances(documents, intents, entities)
+        
+        final_json = {
+            "projectFileVersion": "2023-04-01",
+            "stringIndexType": "Utf16CodeUnit",
+            "metadata": {
+                "projectKind": "Conversation",
+                "projectName": "PRODUCTS-PROJECT",
+                "multilingual": True,
+                "description": "DESCRIPTION",
+                "language": "es",
+                "settings": {"confidenceThreshold": 0.7 }
+            },
+            "assets": {
+                "projectKind": "Conversation",
+                "intents": intents["intents"],
+                "entities": entities["entities"],
+                "utterances": utterances["utterances"]
+            }
+        }
+        
+        json_instance = GeneratedJSON()
+        json_instance.save_json(final_json)
+        
+        print("✅ JSON estructurado generado y guardado correctamente.")
+        return final_json
