@@ -2,7 +2,6 @@ import os
 import requests
 from dotenv import load_dotenv
 
-load_dotenv()
 
 class CLUService:
     @staticmethod
@@ -10,10 +9,14 @@ class CLUService:
         """
         Crea un nuevo proyecto en Azure CLU utilizando el JSON generado.
         """
-        endpoint = "https://carlos-ai-lang.cognitiveservices.azure.com/"
-        api_key = "viUVh1sjdzBWKmyGJnmCNlECpmYQFhimn1dxE7U7tsBBlkd1pO8RJQQJ99BBACYeBjFXJ3w3AAAaACOGrbJX"
+        load_dotenv()
+
+        endpoint =  os.getenv("AZURE_CLU_ENDPOINT")
+        api_key =  os.getenv("AZURE_CLU_API_KEY")
         api_version = "2023-04-01"
 
+        print("Endpoint", endpoint)
+        print("Key", api_key)
         url = f"{endpoint}/language/authoring/analyze-conversations/projects/{name}/:import?api-version={api_version}"
 
         headers = {
