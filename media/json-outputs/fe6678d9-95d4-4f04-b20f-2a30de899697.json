@@ -1,0 +1,130 @@
+{
+    "projectFileVersion": "1.0",
+    "stringIndexType": "Utf16CodeUnit",
+    "metadata": {
+        "projectKind": "Conversation",
+        "settings": {
+            "confidenceThreshold": 0.7
+        },
+        "projectName": "LG Gram Laptop Specifications",
+        "multilingual": false,
+        "description": "Document analysis for LG Gram laptop details",
+        "language": "es-ES"
+    },
+    "assets": {
+        "projectKind": "Conversation",
+        "intents": [
+            {
+                "category": "obtener_detalles_producto"
+            },
+            {
+                "category": "consultar_precio_producto"
+            }
+        ],
+        "entities": [
+            {
+                "category": "producto",
+                "children": [
+                    {
+                        "category": "marca",
+                        "value": "LG"
+                    },
+                    {
+                        "category": "modelo",
+                        "value": "gram 17Z90R"
+                    }
+                ]
+            },
+            {
+                "category": "caracteristica",
+                "children": [
+                    {
+                        "category": "proceso",
+                        "value": "procesador"
+                    },
+                    {
+                        "category": "almacenamiento",
+                        "value": "1TB SSD"
+                    },
+                    {
+                        "category": "ram",
+                        "value": "32GB"
+                    }
+                ]
+            },
+            {
+                "category": "precio",
+                "value": "2205,78 €"
+            },
+            {
+                "category": "tiempo_bateria",
+                "value": "20h"
+            }
+        ],
+        "utterances": [
+            {
+                "text": "¿Cuáles son los detalles del LG gram 17Z90R?",
+                "dataset": "General",
+                "intent": "obtener_detalles_producto",
+                "entities": [
+                    {
+                        "category": "producto",
+                        "offset": 27,
+                        "length": 15
+                    }
+                ]
+            },
+            {
+                "text": "Dame el precio del LG gram 17Z90R.",
+                "dataset": "General",
+                "intent": "consultar_precio_producto",
+                "entities": [
+                    {
+                        "category": "producto",
+                        "offset": 20,
+                        "length": 15
+                    },
+                    {
+                        "category": "precio",
+                        "offset": 25,
+                        "length": 10
+                    }
+                ]
+            },
+            {
+                "text": "¿Qué tipo de procesador tiene el LG gram?",
+                "dataset": "General",
+                "intent": "obtener_detalles_producto",
+                "entities": [
+                    {
+                        "category": "producto",
+                        "offset": 27,
+                        "length": 15
+                    },
+                    {
+                        "category": "caracteristica",
+                        "offset": 28,
+                        "length": 9
+                    }
+                ]
+            },
+            {
+                "text": "¿Cuántas horas dura la batería del LG gram 17Z90R?",
+                "dataset": "General",
+                "intent": "obtener_detalles_producto",
+                "entities": [
+                    {
+                        "category": "producto",
+                        "offset": 36,
+                        "length": 15
+                    },
+                    {
+                        "category": "tiempo_bateria",
+                        "offset": 35,
+                        "length": 2
+                    }
+                ]
+            }
+        ]
+    }
+}
